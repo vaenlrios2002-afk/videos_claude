@@ -1,21 +1,33 @@
 import { Composition } from "remotion";
 import { Birthday } from "./Birthday/Birthday";
-import { config } from "./Birthday/config";
+import { config as birthdayConfig } from "./Birthday/config";
+import { Premium } from "./Premium/Premium";
+import { config as premiumConfig } from "./Premium/config";
 
-const totalDuration = Math.max(
-  config.fps,
-  config.clips.reduce((acc, clip) => acc + clip.durationInFrames, 0),
+const birthdayDuration = Math.max(
+  birthdayConfig.fps,
+  birthdayConfig.clips.reduce((acc, c) => acc + c.durationInFrames, 0),
 );
 
 export const RemotionRoot = () => {
   return (
-    <Composition
-      id="Birthday"
-      component={Birthday}
-      durationInFrames={totalDuration}
-      fps={config.fps}
-      width={config.width}
-      height={config.height}
-    />
+    <>
+      <Composition
+        id="Premium"
+        component={Premium}
+        durationInFrames={premiumConfig.durationInFrames}
+        fps={premiumConfig.fps}
+        width={premiumConfig.width}
+        height={premiumConfig.height}
+      />
+      <Composition
+        id="Birthday"
+        component={Birthday}
+        durationInFrames={birthdayDuration}
+        fps={birthdayConfig.fps}
+        width={birthdayConfig.width}
+        height={birthdayConfig.height}
+      />
+    </>
   );
 };

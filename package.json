@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "remotion studio",
-    "build": "remotion render Birthday out/cumpleanos.mp4",
+    "build": "remotion render Premium out/premium.mp4",
+    "build:birthday": "remotion render Birthday out/cumpleanos.mp4",
     "upgrade": "remotion upgrade"
   },
   "dependencies": {
     "@remotion/cli": "4.0.460",
+    "@remotion/google-fonts": "^4.0.460",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "remotion": "4.0.460"
