@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "ESNext",
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "allowJs": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2020"]
+  },
+  "include": ["src", "remotion.config.ts"]
+}
