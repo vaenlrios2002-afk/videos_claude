@@ -11,6 +11,7 @@ import {
 } from "remotion";
 import { loadFont as loadCormorant } from "@remotion/google-fonts/CormorantGaramond";
 import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
+import { loadFont as loadBigShouldersInline } from "@remotion/google-fonts/BigShouldersInline";
 import { config, type Cut, type TextOverlay } from "./config";
 
 const { fontFamily: serif } = loadCormorant("normal", {
@@ -20,6 +21,11 @@ const { fontFamily: serif } = loadCormorant("normal", {
 loadCormorant("italic", { weights: ["400", "500"], subsets: ["latin"] });
 const { fontFamily: sans } = loadInter("normal", {
   weights: ["300", "400"],
+  subsets: ["latin"],
+});
+
+const { fontFamily: bigShoulders } = loadBigShouldersInline("normal", {
+  weights: ["300", "400", "500"],
   subsets: ["latin"],
 });
 
@@ -33,6 +39,9 @@ const COLORS = {
   overlay: "rgba(10, 8, 5, 0.35)",
   vignette:
     "radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(0,0,0,0.65) 100%)",
+  // HAND'S GOD brand palette
+  brandBeige: "#d4c2a8",
+  brandNavy: "#3a3d4d",
 };
 
 // Meta Ads safe area for 1080x1920
@@ -64,7 +73,7 @@ const CutShot = ({ cut, fps }: { cut: Cut; fps: number }) => {
         <OffthreadVideo
           src={staticFile(cut.src)}
           startFrom={Math.round(cut.startFromSec * fps)}
-          muted
+          volume={config.voiceVolume}
           style={{
             width: "100%",
             height: "100%",
@@ -211,20 +220,20 @@ const BrandFrame = () => {
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
-  const lineW = interpolate(frame, [12, 48], [0, 220], {
+  const lineW = interpolate(frame, [14, 52], [0, 200], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
   return (
-    <AbsoluteFill style={{ backgroundColor: COLORS.darkBg, opacity: fadeIn }}>
-      {/* Subtle grain on brand frame too */}
+    <AbsoluteFill style={{ backgroundColor: COLORS.brandBeige, opacity: fadeIn }}>
+      {/* Very subtle grain to keep texture continuity with the video cuts */}
       <AbsoluteFill
         style={{
           backgroundImage: `url("${GRAIN_DATA_URI}")`,
           backgroundSize: "320px 320px",
-          opacity: 0.12,
-          mixBlendMode: "overlay",
+          opacity: 0.08,
+          mixBlendMode: "multiply",
         }}
       />
       <AbsoluteFill
@@ -233,39 +242,39 @@ const BrandFrame = () => {
           alignItems: "center",
           paddingLeft: SAFE.x,
           paddingRight: SAFE.x,
-          transform: "translateY(-40px)",
+          transform: "translateY(-30px)",
         }}
       >
         <h1
           style={{
-            color: COLORS.cream,
-            fontFamily: serif,
-            fontWeight: 500,
-            fontSize: 96,
-            letterSpacing: "0.32em",
-            textIndent: "0.32em",
+            color: COLORS.brandNavy,
+            fontFamily: bigShoulders,
+            fontWeight: 400,
+            fontSize: 168,
+            letterSpacing: "0.04em",
+            lineHeight: 0.95,
             margin: 0,
             textAlign: "center",
+            whiteSpace: "pre-line",
           }}
         >
-          {config.brand}
+          {"HAND'S\nGOD"}
         </h1>
         <div
           style={{
             width: lineW,
-            height: 1,
-            backgroundColor: COLORS.gold,
-            margin: "44px 0",
-            boxShadow: `0 0 12px ${COLORS.gold}`,
+            height: 1.5,
+            backgroundColor: COLORS.brandNavy,
+            margin: "52px 0",
           }}
         />
         <p
           style={{
-            color: COLORS.gold,
+            color: COLORS.brandNavy,
             fontFamily: serif,
             fontStyle: "italic",
             fontWeight: 400,
-            fontSize: 56,
+            fontSize: 50,
             margin: 0,
             opacity: 0.92,
           }}
@@ -274,12 +283,12 @@ const BrandFrame = () => {
         </p>
         <p
           style={{
-            color: COLORS.cream,
+            color: COLORS.brandNavy,
             fontFamily: sans,
-            fontWeight: 300,
-            fontSize: 28,
+            fontWeight: 400,
+            fontSize: 26,
             letterSpacing: "0.4em",
-            margin: "56px 0 0",
+            margin: "60px 0 0",
             opacity: 0.7,
           }}
         >

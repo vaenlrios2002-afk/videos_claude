@@ -12,10 +12,9 @@ export type TextOverlay = {
 };
 
 export const config = {
-  // CAMBIA estas dos líneas con tu marca real:
-  brand: "[NOMBRE DEL SPA]",
-  handle: "@tuspamasculino",
-  cta: "Reservá tu cita",
+  brand: "HAND'S GOD",
+  handle: "@handsgod",
+  cta: "Reservá tu sesión",
 
   fps: 30,
   width: 1080,
@@ -25,7 +24,9 @@ export const config = {
   audioStartFromSec: 0,
   audioFadeInSec: 0.8,
   audioFadeOutSec: 2.0,
-  audioVolume: 0.55,
+  audioVolume: 0.18,         // música de fondo, no compite con la voz
+
+  voiceVolume: 1.0,          // volumen del audio original (la voz de cada toma)
 
   // 4 cortes esparcidos del clip de 80s.
   // Ajustá startFromSec si conocés mejor el material.
