@@ -43,10 +43,17 @@ const useLayout = () => {
     phraseSize: isVertical ? 64 : 92,
     outroSize: isVertical ? 50 : 68,
     textMaxWidth: isVertical ? 920 : 1500,
-    frameInset: isVertical ? 44 : 60,
-    cornerSize: isVertical ? 50 : 72,
-    brandPadding: isVertical ? 90 : 100,
+    // Safe-area aware insets — en vertical evitamos top ~220 / bottom ~400
+    // (zona de Instagram Reels / TikTok / Shorts UI)
+    frameInsetX: isVertical ? 70 : 60,
+    frameInsetTop: isVertical ? 240 : 60,
+    frameInsetBottom: isVertical ? 400 : 60,
+    cornerSize: isVertical ? 56 : 72,
+    brandPaddingBottom: isVertical ? 460 : 100,
     brandFont: isVertical ? 14 : 18,
+    // Compensar el offset visual del bottom UI: el centro visible está
+    // por encima del centro real del frame
+    contentOffsetY: isVertical ? -90 : 0,
   };
 };
 
@@ -126,7 +133,7 @@ const PhraseBlock = ({ phrase }: { phrase: Phrase }) => {
           justifyContent: "center",
           alignItems: "center",
           opacity,
-          transform: `scale(${scale})`,
+          transform: `translateY(${layout.contentOffsetY}px) scale(${scale})`,
         }}
       >
         <div
@@ -172,7 +179,7 @@ const PhraseBlock = ({ phrase }: { phrase: Phrase }) => {
         justifyContent: "center",
         alignItems: "center",
         opacity,
-        transform: `translateY(${rise}px)`,
+        transform: `translateY(${rise + layout.contentOffsetY}px)`,
       }}
     >
       <h2
@@ -209,17 +216,17 @@ const Frame = () => {
       style={{ position: "absolute", backgroundColor: COLORS.gold, ...style }}
     />
   );
-  const { frameInset: I, cornerSize: S } = layout;
+  const { frameInsetX: X, frameInsetTop: T, frameInsetBottom: B, cornerSize: S } = layout;
   return (
     <AbsoluteFill style={{ opacity, pointerEvents: "none" }}>
-      {corner({ top: I, left: I, width: S, height: 1 })}
-      {corner({ top: I, left: I, width: 1, height: S })}
-      {corner({ top: I, right: I, width: S, height: 1 })}
-      {corner({ top: I, right: I, width: 1, height: S })}
-      {corner({ bottom: I, left: I, width: S, height: 1 })}
-      {corner({ bottom: I, left: I, width: 1, height: S })}
-      {corner({ bottom: I, right: I, width: S, height: 1 })}
-      {corner({ bottom: I, right: I, width: 1, height: S })}
+      {corner({ top: T, left: X, width: S, height: 1 })}
+      {corner({ top: T, left: X, width: 1, height: S })}
+      {corner({ top: T, right: X, width: S, height: 1 })}
+      {corner({ top: T, right: X, width: 1, height: S })}
+      {corner({ bottom: B, left: X, width: S, height: 1 })}
+      {corner({ bottom: B, left: X, width: 1, height: S })}
+      {corner({ bottom: B, right: X, width: S, height: 1 })}
+      {corner({ bottom: B, right: X, width: 1, height: S })}
     </AbsoluteFill>
   );
 };
@@ -264,7 +271,7 @@ export const Premium = () => {
         style={{
           alignItems: "center",
           justifyContent: "flex-end",
-          paddingBottom: layout.brandPadding,
+          paddingBottom: layout.brandPaddingBottom,
         }}
       >
         <span
