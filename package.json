@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "remotion studio",
-    "build": "remotion render Premium out/premium.mp4",
-    "build:vertical": "remotion render PremiumVertical out/premium-vertical.mp4",
+    "build": "remotion render Valens out/valens.mp4",
+    "build:valens": "remotion render Valens out/valens.mp4",
+    "build:valens-mute": "remotion render Valens out/valens-muted.mp4",
+    "build:premium": "remotion render Premium out/premium.mp4",
+    "build:premium-vertical": "remotion render PremiumVertical out/premium-vertical.mp4",
     "build:birthday": "remotion render Birthday out/cumpleanos.mp4",
     "upgrade": "remotion upgrade"
   },

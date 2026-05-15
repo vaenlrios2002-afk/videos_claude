@@ -3,15 +3,29 @@ import { Birthday } from "./Birthday/Birthday";
 import { config as birthdayConfig } from "./Birthday/config";
 import { Premium } from "./Premium/Premium";
 import { config as premiumConfig } from "./Premium/config";
+import { Valens } from "./Valens/Valens";
+import { config as valensConfig } from "./Valens/config";
 
 const birthdayDuration = Math.max(
   birthdayConfig.fps,
   birthdayConfig.clips.reduce((acc, c) => acc + c.durationInFrames, 0),
 );
 
+const valensDuration =
+  valensConfig.clips.reduce((acc, c) => acc + c.durationInFrames, 0) +
+  valensConfig.brandFrameDuration;
+
 export const RemotionRoot = () => {
   return (
     <>
+      <Composition
+        id="Valens"
+        component={Valens}
+        durationInFrames={valensDuration}
+        fps={valensConfig.fps}
+        width={valensConfig.width}
+        height={valensConfig.height}
+      />
       <Composition
         id="Premium"
         component={Premium}
