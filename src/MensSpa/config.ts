@@ -1,14 +1,8 @@
-export type Cut = {
-  src: string;
-  startFromSec: number;
-  durationInFrames: number;
-};
-
 export type TextOverlay = {
   text: string;
   fromFrame: number;
   durationInFrames: number;
-  variant: "hook" | "reveal" | "cta";
+  variant: "hook" | "reveal" | "philosophy" | "cta";
 };
 
 export const config = {
@@ -20,28 +14,37 @@ export const config = {
   width: 1080,
   height: 1920,
 
+  // Clip único, full duration (80.5s)
+  clip: {
+    src: "videos/spa.mp4",
+    startFromSec: 0,
+    durationInFrames: 2415, // 80.5s @ 30fps
+  },
+
+  brandFrameDuration: 90, // 3s
+
   audio: "audio/pulse.mp3" as string,
   audioStartFromSec: 0,
-  audioFadeInSec: 0.8,
-  audioFadeOutSec: 2.0,
-  audioVolume: 0.18,         // música de fondo, no compite con la voz
+  audioFadeInSec: 1.0,
+  audioFadeOutSec: 2.5,
+  audioVolume: 0.18,         // música de fondo
+  voiceVolume: 1.0,          // voz original al 100%
 
-  voiceVolume: 1.0,          // volumen del audio original (la voz de cada toma)
-
-  // 4 cortes esparcidos del clip de 80s.
-  // Ajustá startFromSec si conocés mejor el material.
-  cuts: [
-    { src: "videos/spa.mp4", startFromSec: 8, durationInFrames: 150 },  // 0-5s
-    { src: "videos/spa.mp4", startFromSec: 22, durationInFrames: 150 }, // 5-10s
-    { src: "videos/spa.mp4", startFromSec: 38, durationInFrames: 150 }, // 10-15s
-    { src: "videos/spa.mp4", startFromSec: 58, durationInFrames: 150 }, // 15-20s
-  ] as Cut[],
-
-  brandFrameDuration: 60, // 2s
-
+  // Frases espaciadas a lo largo de los 80s con transiciones de cross-fade
   textOverlays: [
-    { text: "No es vanidad.", fromFrame: 24, durationInFrames: 130, variant: "hook" },
-    { text: "Es respeto.", fromFrame: 180, durationInFrames: 200, variant: "reveal" },
-    { text: "Cuidate como\nel hombre que ya sos.", fromFrame: 430, durationInFrames: 150, variant: "cta" },
+    // Frase 1 — hook (4s a 14s)
+    { text: "No es vanidad.", fromFrame: 120, durationInFrames: 300, variant: "hook" },
+
+    // Frase 2 — reveal (32s a 44s) — "respeto" en dorado itálica
+    { text: "Es respeto.", fromFrame: 960, durationInFrames: 360, variant: "reveal" },
+
+    // Frase 3 — philosophy (54s a 65s)
+    { text: "Para hombres\nque se eligen.", fromFrame: 1620, durationInFrames: 330, variant: "philosophy" },
+
+    // Frase 4 — CTA setup (70s a 79s)
+    { text: "Cuidate como\nte merecés.", fromFrame: 2100, durationInFrames: 270, variant: "cta" },
   ] as TextOverlay[],
+
+  // Light leaks cálidos en los momentos de entrada de cada frase
+  flashFrames: [120, 960, 1620, 2100, 2415],
 };

@@ -23,8 +23,7 @@ const teaserDuration =
   teaserConfig.clip.durationInFrames + teaserConfig.brandFrameDuration;
 
 const mensSpaDuration =
-  mensSpaConfig.cuts.reduce((acc, c) => acc + c.durationInFrames, 0) +
-  mensSpaConfig.brandFrameDuration;
+  mensSpaConfig.clip.durationInFrames + mensSpaConfig.brandFrameDuration;
 
 export const RemotionRoot = () => {
   return (
