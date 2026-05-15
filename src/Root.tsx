@@ -5,6 +5,8 @@ import { Premium } from "./Premium/Premium";
 import { config as premiumConfig } from "./Premium/config";
 import { Valens } from "./Valens/Valens";
 import { config as valensConfig } from "./Valens/config";
+import { Teaser } from "./ValensTeaser/Teaser";
+import { config as teaserConfig } from "./ValensTeaser/config";
 
 const birthdayDuration = Math.max(
   birthdayConfig.fps,
@@ -15,9 +17,20 @@ const valensDuration =
   valensConfig.clips.reduce((acc, c) => acc + c.durationInFrames, 0) +
   valensConfig.brandFrameDuration;
 
+const teaserDuration =
+  teaserConfig.clip.durationInFrames + teaserConfig.brandFrameDuration;
+
 export const RemotionRoot = () => {
   return (
     <>
+      <Composition
+        id="ValensTeaser"
+        component={Teaser}
+        durationInFrames={teaserDuration}
+        fps={teaserConfig.fps}
+        width={teaserConfig.width}
+        height={teaserConfig.height}
+      />
       <Composition
         id="Valens"
         component={Valens}
