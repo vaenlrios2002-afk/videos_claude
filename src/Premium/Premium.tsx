@@ -32,6 +32,24 @@ const COLORS = {
     "radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%)",
 };
 
+const useLayout = () => {
+  const { width, height } = useVideoConfig();
+  const isVertical = width < height;
+  return {
+    isVertical,
+    heroSize: isVertical ? 134 : 200,
+    heroMaxLineW: isVertical ? 180 : 260,
+    heroLineMargin: isVertical ? 32 : 48,
+    phraseSize: isVertical ? 64 : 92,
+    outroSize: isVertical ? 50 : 68,
+    textMaxWidth: isVertical ? 920 : 1500,
+    frameInset: isVertical ? 44 : 60,
+    cornerSize: isVertical ? 50 : 72,
+    brandPadding: isVertical ? 90 : 100,
+    brandFont: isVertical ? 14 : 18,
+  };
+};
+
 const ClipBackground = () => {
   const frame = useCurrentFrame();
   let cursor = 0;
@@ -69,6 +87,7 @@ const ClipBackground = () => {
 
 const PhraseBlock = ({ phrase }: { phrase: Phrase }) => {
   const frame = useCurrentFrame();
+  const layout = useLayout();
   const local = frame - phrase.from;
 
   const fadeIn = interpolate(local, [0, 22], [0, 1], {
@@ -96,7 +115,7 @@ const PhraseBlock = ({ phrase }: { phrase: Phrase }) => {
       extrapolateRight: "clamp",
       easing: Easing.out(Easing.cubic),
     });
-    const lineW = interpolate(local, [12, 50], [0, 260], {
+    const lineW = interpolate(local, [12, 50], [0, layout.heroMaxLineW], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
       easing: Easing.out(Easing.cubic),
@@ -115,7 +134,7 @@ const PhraseBlock = ({ phrase }: { phrase: Phrase }) => {
             width: lineW,
             height: 1,
             backgroundColor: COLORS.gold,
-            marginBottom: 48,
+            marginBottom: layout.heroLineMargin,
             boxShadow: `0 0 18px ${COLORS.gold}`,
           }}
         />
@@ -124,7 +143,7 @@ const PhraseBlock = ({ phrase }: { phrase: Phrase }) => {
             color: COLORS.gold,
             fontFamily: playfair.fontFamily,
             fontWeight: 400,
-            fontSize: 200,
+            fontSize: layout.heroSize,
             margin: 0,
             letterSpacing: "0.02em",
             textShadow: "0 6px 40px rgba(0,0,0,0.85)",
@@ -137,7 +156,7 @@ const PhraseBlock = ({ phrase }: { phrase: Phrase }) => {
             width: lineW,
             height: 1,
             backgroundColor: COLORS.gold,
-            marginTop: 48,
+            marginTop: layout.heroLineMargin,
             boxShadow: `0 0 18px ${COLORS.gold}`,
           }}
         />
@@ -162,11 +181,11 @@ const PhraseBlock = ({ phrase }: { phrase: Phrase }) => {
           fontFamily: playfair.fontFamily,
           fontWeight: 400,
           fontStyle: isOutro ? "italic" : "normal",
-          fontSize: isOutro ? 68 : 92,
+          fontSize: isOutro ? layout.outroSize : layout.phraseSize,
           lineHeight: 1.22,
           margin: 0,
           textAlign: "center",
-          maxWidth: 1500,
+          maxWidth: layout.textMaxWidth,
           letterSpacing: "0.01em",
           whiteSpace: "pre-line",
           textShadow: "0 4px 30px rgba(0,0,0,0.85)",
@@ -180,6 +199,7 @@ const PhraseBlock = ({ phrase }: { phrase: Phrase }) => {
 
 const Frame = () => {
   const frame = useCurrentFrame();
+  const layout = useLayout();
   const opacity = interpolate(frame, [0, 50], [0, 0.85], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -189,16 +209,17 @@ const Frame = () => {
       style={{ position: "absolute", backgroundColor: COLORS.gold, ...style }}
     />
   );
+  const { frameInset: I, cornerSize: S } = layout;
   return (
     <AbsoluteFill style={{ opacity, pointerEvents: "none" }}>
-      {corner({ top: 60, left: 60, width: 72, height: 1 })}
-      {corner({ top: 60, left: 60, width: 1, height: 72 })}
-      {corner({ top: 60, right: 60, width: 72, height: 1 })}
-      {corner({ top: 60, right: 60, width: 1, height: 72 })}
-      {corner({ bottom: 60, left: 60, width: 72, height: 1 })}
-      {corner({ bottom: 60, left: 60, width: 1, height: 72 })}
-      {corner({ bottom: 60, right: 60, width: 72, height: 1 })}
-      {corner({ bottom: 60, right: 60, width: 1, height: 72 })}
+      {corner({ top: I, left: I, width: S, height: 1 })}
+      {corner({ top: I, left: I, width: 1, height: S })}
+      {corner({ top: I, right: I, width: S, height: 1 })}
+      {corner({ top: I, right: I, width: 1, height: S })}
+      {corner({ bottom: I, left: I, width: S, height: 1 })}
+      {corner({ bottom: I, left: I, width: 1, height: S })}
+      {corner({ bottom: I, right: I, width: S, height: 1 })}
+      {corner({ bottom: I, right: I, width: 1, height: S })}
     </AbsoluteFill>
   );
 };
@@ -206,6 +227,7 @@ const Frame = () => {
 export const Premium = () => {
   const frame = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
+  const layout = useLayout();
 
   const audioFadeStart = durationInFrames - Math.round(config.audioFadeOutSec * fps);
   const audioVolume = interpolate(
@@ -242,7 +264,7 @@ export const Premium = () => {
         style={{
           alignItems: "center",
           justifyContent: "flex-end",
-          paddingBottom: 100,
+          paddingBottom: layout.brandPadding,
         }}
       >
         <span
@@ -250,7 +272,7 @@ export const Premium = () => {
             color: COLORS.cream,
             fontFamily: inter.fontFamily,
             fontWeight: 300,
-            fontSize: 18,
+            fontSize: layout.brandFont,
             letterSpacing: "0.5em",
             textTransform: "uppercase",
             opacity: brandOpacity,

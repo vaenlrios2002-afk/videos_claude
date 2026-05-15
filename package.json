@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "remotion studio",
     "build": "remotion render Premium out/premium.mp4",
+    "build:vertical": "remotion render PremiumVertical out/premium-vertical.mp4",
     "build:birthday": "remotion render Birthday out/cumpleanos.mp4",
     "upgrade": "remotion upgrade"
   },

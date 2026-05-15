@@ -21,6 +21,14 @@ export const RemotionRoot = () => {
         height={premiumConfig.height}
       />
       <Composition
+        id="PremiumVertical"
+        component={Premium}
+        durationInFrames={premiumConfig.durationInFrames}
+        fps={premiumConfig.fps}
+        width={1080}
+        height={1920}
+      />
+      <Composition
         id="Birthday"
         component={Birthday}
         durationInFrames={birthdayDuration}
