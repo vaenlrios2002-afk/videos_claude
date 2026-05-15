@@ -8,6 +8,8 @@
     "build:valens": "remotion render Valens out/valens.mp4",
     "build:valens-mute": "remotion render Valens out/valens-muted.mp4",
     "build:teaser": "remotion render ValensTeaser out/valens-teaser.mp4",
+    "build:spa": "remotion render MensSpa out/spa.mp4",
+    "build:spa-mute": "remotion render MensSpa out/spa-muted.mp4",
     "build:premium": "remotion render Premium out/premium.mp4",
     "build:premium-vertical": "remotion render PremiumVertical out/premium-vertical.mp4",
     "build:birthday": "remotion render Birthday out/cumpleanos.mp4",
