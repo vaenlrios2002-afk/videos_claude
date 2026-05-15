@@ -4,3 +4,9 @@ out
 .cache
 *.log
 *.tsbuildinfo
+
+# Media assets (kept locally, not in git)
+public/videos/*
+!public/videos/.gitkeep
+public/audio/*
+!public/audio/.gitkeep

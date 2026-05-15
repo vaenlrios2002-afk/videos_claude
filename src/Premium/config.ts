@@ -17,17 +17,12 @@ export const config = {
   height: 1080,
   durationInFrames: 540,
 
-  // Dejá "" mientras no haya archivo en public/audio/.
-  // Cuando copies tu mp3 a public/audio/intro.mp3, cambialo a "audio/intro.mp3".
-  audio: "" as string,
+  audio: "audio/intro.mp3" as string,
   audioStartFromSec: 0,
   audioFadeOutSec: 1.5,
 
   clips: [
-    // Copia tus mp4 a public/videos/ y descomenta:
-    // { src: "videos/clip1.mp4", durationInFrames: 180 },
-    // { src: "videos/clip2.mp4", durationInFrames: 180 },
-    // { src: "videos/clip3.mp4", durationInFrames: 180 },
+    { src: "videos/IMG_0095.MOV", durationInFrames: 540 },
   ] as Clip[],
 
   phrases: [

@@ -2,8 +2,8 @@ import {
   AbsoluteFill,
   Audio,
   Easing,
+  OffthreadVideo,
   Sequence,
-  Video,
   interpolate,
   staticFile,
   useCurrentFrame,
@@ -54,7 +54,7 @@ const ClipBackground = () => {
             durationInFrames={clip.durationInFrames}
           >
             <AbsoluteFill style={{ transform: `scale(${scale})` }}>
-              <Video
+              <OffthreadVideo
                 src={staticFile(clip.src)}
                 muted
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
