@@ -16,11 +16,11 @@ export const config = {
   width: 1080,
   height: 1920,
 
-  audio: "audio/pulse.mp3" as string,
+  audio: "audio/suelto.mp3" as string,
   audioStartFromSec: 0,
   audioFadeInSec: 1.5,
   audioFadeOutSec: 3.0,
-  audioVolume: 0.65,
+  audioVolume: 0.7,
 
   // 3 clips back-to-back (60.7s total)
   clips: [
@@ -33,8 +33,8 @@ export const config = {
   crossDissolveFrames: 12,
 
   phrases: [
-    { text: "Donde la mente va,",      fromFrame: 210, durationInFrames: 360, variant: "beat1" }, // 7s - 19s
-    { text: "el cuerpo la sigue.",     fromFrame: 900, durationInFrames: 340, variant: "beat2" }, // 30s - 41.3s
+    { text: "Hoy suelto todo.",            fromFrame: 210, durationInFrames: 360, variant: "beat1" }, // 7s - 19s
+    { text: "Lo que no me deja ser.",      fromFrame: 900, durationInFrames: 340, variant: "beat2" }, // 30s - 41.3s
   ] as Phrase[],
 
   // Flashes esparcidos — frases + transiciones de cada clip
