@@ -26,16 +26,17 @@ export const config = {
   clips: [
     { src: "videos/workout1.mov", startFromSec: 0, durationInFrames: 232 },  // 7.73s
     { src: "videos/workout2.mov", startFromSec: 0, durationInFrames: 311 },  // 10.37s
-    { src: "videos/workout3.mov", startFromSec: 0, durationInFrames: 990 },  // 33.00s
+    { src: "videos/workout3.mov", startFromSec: 0, durationInFrames: 734 },  // 24.47s
   ] as Clip[],
 
   // Cross-dissolve duration between clips (frames of overlap)
   crossDissolveFrames: 12,
 
   phrases: [
-    { text: "No tengo prisa.",     fromFrame: 240,  durationInFrames: 330, variant: "beat1" }, // 8s - 19s
-    { text: "Estoy floreciendo.",  fromFrame: 1100, durationInFrames: 410, variant: "beat2" }, // 36.7s - end
+    { text: "Donde la mente va,",      fromFrame: 210, durationInFrames: 360, variant: "beat1" }, // 7s - 19s
+    { text: "el cuerpo la sigue.",     fromFrame: 900, durationInFrames: 340, variant: "beat2" }, // 30s - 41.3s
   ] as Phrase[],
 
-  flashFrames: [240, 1100],
+  // Flashes esparcidos — frases + transiciones de cada clip
+  flashFrames: [210, 540, 770, 900, 1150],
 };

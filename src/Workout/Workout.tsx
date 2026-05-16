@@ -93,18 +93,25 @@ const ClipShot = ({
       );
   const opacity = Math.min(fadeIn, fadeOut);
 
-  // Very subtle drift per clip — micro Ken Burns
+  // Stronger Ken Burns per clip — más dinámico
   const scale = interpolate(
     frame,
     [0, clip.durationInFrames],
-    [1.02, 1.06],
+    [1.0, 1.12],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+  );
+  // Subtle horizontal drift for more cinematic motion
+  const driftX = interpolate(
+    frame,
+    [0, clip.durationInFrames],
+    [-15, 15],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
   return (
     <AbsoluteFill style={{ opacity }}>
       {/* Base video with cinematic grade */}
-      <AbsoluteFill style={{ transform: `scale(${scale})` }}>
+      <AbsoluteFill style={{ transform: `translateX(${driftX}px) scale(${scale})` }}>
         <OffthreadVideo
           src={staticFile(clip.src)}
           startFrom={Math.round(clip.startFromSec * fps)}
@@ -191,26 +198,42 @@ const Flash = ({ centerFrame, peak = 0.14 }: { centerFrame: number; peak?: numbe
 const PhraseOverlay = ({ phrase }: { phrase: Phrase }) => {
   const frame = useCurrentFrame();
   const local = frame - phrase.fromFrame;
+  const isBeat2 = phrase.variant === "beat2";
 
-  const fadeIn = interpolate(local, [0, 32], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: Easing.out(Easing.cubic),
-  });
-  const fadeOut = interpolate(
+  // Wrapper fade out at the end of the sequence
+  const wrapFadeOut = interpolate(
     local,
-    [phrase.durationInFrames - 32, phrase.durationInFrames],
+    [phrase.durationInFrames - 36, phrase.durationInFrames],
     [1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
-  const opacity = Math.min(fadeIn, fadeOut);
-  const rise = interpolate(local, [0, 40], [22, 0], {
+
+  // Decorative flourish on top — fades in first
+  const flourishOpacity = interpolate(local, [0, 24], [0, 0.65], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
 
-  const isBeat2 = phrase.variant === "beat2";
+  // Word-by-word stagger — más dinámico
+  const words = phrase.text.split(" ");
+  const STAGGER = 7; // frames per word
+  const WORD_FADE = 18;
+  const WORD_RISE = 22;
+  const startOffset = 18; // wait for flourish before words start
+
+  // Hairline below — grows after all words land
+  const lastWordEnd = startOffset + (words.length - 1) * STAGGER + WORD_FADE;
+  const lineW = interpolate(
+    local,
+    [lastWordEnd, lastWordEnd + 36],
+    [0, 220],
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: Easing.out(Easing.cubic),
+    },
+  );
 
   return (
     <AbsoluteFill
@@ -221,28 +244,90 @@ const PhraseOverlay = ({ phrase }: { phrase: Phrase }) => {
         paddingRight: SAFE.x,
         paddingTop: SAFE.top,
         paddingBottom: SAFE.bottom,
-        opacity,
-        transform: `translateY(${-30 + rise}px)`,
+        opacity: wrapFadeOut,
       }}
     >
-      <h2
-        style={{
-          color: isBeat2 ? COLORS.peachWarm : COLORS.cream,
-          fontFamily: serif,
-          fontWeight: isBeat2 ? 400 : 300,
-          fontStyle: "italic",  // ambas en itálica — más femenina, más editorial
-          fontSize: isBeat2 ? 148 : 130,
-          letterSpacing: isBeat2 ? "0.005em" : "0.02em",
-          lineHeight: 1.12,
-          margin: 0,
-          textAlign: "center",
-          // Dreamy glow + dark shadow para legibilidad
-          textShadow:
-            "0 0 28px rgba(255,210,180,0.25), 0 6px 36px rgba(0,0,0,0.85)",
-        }}
-      >
-        {phrase.text}
-      </h2>
+      <div style={{ textAlign: "center", maxWidth: 940 }}>
+        {/* Decorative flourish above */}
+        <div
+          style={{
+            color: isBeat2 ? COLORS.peachWarm : COLORS.peach,
+            fontFamily: serif,
+            fontStyle: "italic",
+            fontSize: 36,
+            letterSpacing: "1.2em",
+            marginBottom: 36,
+            opacity: flourishOpacity,
+            textShadow: "0 4px 20px rgba(0,0,0,0.7)",
+          }}
+        >
+          ·  ·  ·
+        </div>
+
+        {/* Words with stagger */}
+        <h2
+          style={{
+            color: isBeat2 ? COLORS.peachWarm : COLORS.cream,
+            fontFamily: serif,
+            fontWeight: isBeat2 ? 400 : 300,
+            fontStyle: "italic",
+            fontSize: isBeat2 ? 144 : 124,
+            letterSpacing: isBeat2 ? "0.005em" : "0.02em",
+            lineHeight: 1.12,
+            margin: 0,
+            textShadow:
+              "0 0 28px rgba(255,210,180,0.25), 0 6px 36px rgba(0,0,0,0.85)",
+          }}
+        >
+          {words.map((word, i) => {
+            const wordStart = startOffset + i * STAGGER;
+            const wOpacity = interpolate(
+              local,
+              [wordStart, wordStart + WORD_FADE],
+              [0, 1],
+              {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+                easing: Easing.out(Easing.cubic),
+              },
+            );
+            const wRise = interpolate(
+              local,
+              [wordStart, wordStart + WORD_RISE],
+              [16, 0],
+              {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+                easing: Easing.out(Easing.cubic),
+              },
+            );
+            return (
+              <span
+                key={i}
+                style={{
+                  display: "inline-block",
+                  opacity: wOpacity,
+                  transform: `translateY(${wRise}px)`,
+                  marginRight: i === words.length - 1 ? 0 : "0.28em",
+                }}
+              >
+                {word}
+              </span>
+            );
+          })}
+        </h2>
+
+        {/* Hairline below */}
+        <div
+          style={{
+            width: lineW,
+            height: 1,
+            backgroundColor: isBeat2 ? COLORS.peachWarm : COLORS.peach,
+            margin: "44px auto 0",
+            boxShadow: `0 0 14px ${isBeat2 ? "rgba(232,184,154,0.5)" : "rgba(244,217,196,0.5)"}`,
+          }}
+        />
+      </div>
     </AbsoluteFill>
   );
 };
