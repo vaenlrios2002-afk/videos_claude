@@ -9,6 +9,8 @@ import { Teaser } from "./ValensTeaser/Teaser";
 import { config as teaserConfig } from "./ValensTeaser/config";
 import { MensSpa } from "./MensSpa/MensSpa";
 import { config as mensSpaConfig } from "./MensSpa/config";
+import { Workout } from "./Workout/Workout";
+import { config as workoutConfig } from "./Workout/config";
 
 const birthdayDuration = Math.max(
   birthdayConfig.fps,
@@ -25,9 +27,21 @@ const teaserDuration =
 const mensSpaDuration =
   mensSpaConfig.clip.durationInFrames + mensSpaConfig.brandFrameDuration;
 
+const workoutDuration =
+  workoutConfig.clips.reduce((acc, c) => acc + c.durationInFrames, 0) -
+  workoutConfig.crossDissolveFrames * (workoutConfig.clips.length - 1);
+
 export const RemotionRoot = () => {
   return (
     <>
+      <Composition
+        id="Workout"
+        component={Workout}
+        durationInFrames={workoutDuration}
+        fps={workoutConfig.fps}
+        width={workoutConfig.width}
+        height={workoutConfig.height}
+      />
       <Composition
         id="MensSpa"
         component={MensSpa}
