@@ -16,29 +16,46 @@ const { fontFamily: serif } = loadCormorant("normal", {
   weights: ["300", "400", "500"],
   subsets: ["latin"],
 });
-loadCormorant("italic", { weights: ["400", "500"], subsets: ["latin"] });
+loadCormorant("italic", { weights: ["300", "400", "500"], subsets: ["latin"] });
 
 const COLORS = {
   bg: "#0a0805",
   peach: "#f4d9c4",
+  peachWarm: "#e8b89a",
   cream: "#faf2e8",
   warmFlash: "rgba(248, 218, 188, 0.92)",
-  overlay: "rgba(20, 12, 8, 0.20)",
+  // Cinematic vignette with warm fall-off
   vignette:
-    "radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.45) 100%)",
+    "radial-gradient(ellipse at center, rgba(0,0,0,0) 48%, rgba(20,8,4,0.55) 100%)",
 };
 
 // IG safe area for vertical
 const SAFE = { x: 80, top: 260, bottom: 380 };
 
-// Soft aesthetic warm grade — peachy/dreamy, lifts shadows, slightly desaturates
+// Cinematic warm film grade — desaturated + peachy + lifted shadows
 const VIDEO_FILTER =
-  "saturate(0.88) contrast(1.06) brightness(1.06) sepia(0.08) hue-rotate(-4deg)";
+  "saturate(0.78) contrast(1.04) brightness(1.05) sepia(0.10) hue-rotate(-3deg)";
+
+// Warm shadow tint (multiplied over the video — adds peach to dark areas)
+const SHADOW_TINT =
+  "linear-gradient(165deg, rgba(248,210,178,0.10) 0%, rgba(40,18,8,0.18) 100%)";
+
+// Highlight peach bloom (screen blend — warm tint on bright areas)
+const HIGHLIGHT_BLOOM =
+  "linear-gradient(165deg, rgba(255,220,190,0.22) 0%, rgba(255,255,255,0) 55%)";
+
+// Soft warm light leak from top-right corner
+const CORNER_LEAK =
+  "radial-gradient(circle at 82% 18%, rgba(255,205,170,0.32) 0%, rgba(255,205,170,0) 42%)";
+
+// Subtle bottom-left ambient warm wash
+const AMBIENT_WASH =
+  "radial-gradient(circle at 15% 88%, rgba(220,160,130,0.18) 0%, rgba(220,160,130,0) 50%)";
 
 const GRAIN_DATA_URI =
   "data:image/svg+xml;utf8," +
   encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.95   0 0 0 0 0.85   0 0 0 0 0.72   0 0 0 0.4 0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="380" height="380"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="1.15" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.96   0 0 0 0 0.88   0 0 0 0 0.78   0 0 0 0.35 0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>`,
   );
 
 const ClipShot = ({
@@ -86,6 +103,7 @@ const ClipShot = ({
 
   return (
     <AbsoluteFill style={{ opacity }}>
+      {/* Base video with cinematic grade */}
       <AbsoluteFill style={{ transform: `scale(${scale})` }}>
         <OffthreadVideo
           src={staticFile(clip.src)}
@@ -99,13 +117,36 @@ const ClipShot = ({
           }}
         />
       </AbsoluteFill>
-      <AbsoluteFill style={{ backgroundColor: COLORS.overlay }} />
-      <AbsoluteFill style={{ background: COLORS.vignette }} />
+
+      {/* Warm tint on shadows (multiply) — peachy darks */}
+      <AbsoluteFill
+        style={{ background: SHADOW_TINT, mixBlendMode: "multiply", pointerEvents: "none" }}
+      />
+
+      {/* Peach bloom on highlights (screen) — softens bright areas */}
+      <AbsoluteFill
+        style={{ background: HIGHLIGHT_BLOOM, mixBlendMode: "screen", pointerEvents: "none" }}
+      />
+
+      {/* Diagonal warm light leak from top-right (screen) */}
+      <AbsoluteFill
+        style={{ background: CORNER_LEAK, mixBlendMode: "screen", pointerEvents: "none" }}
+      />
+
+      {/* Bottom-left ambient warm wash (screen) */}
+      <AbsoluteFill
+        style={{ background: AMBIENT_WASH, mixBlendMode: "screen", pointerEvents: "none" }}
+      />
+
+      {/* Cinematic vignette with warm fall-off */}
+      <AbsoluteFill style={{ background: COLORS.vignette, pointerEvents: "none" }} />
+
+      {/* Fine film grain — much subtler than before */}
       <AbsoluteFill
         style={{
           backgroundImage: `url("${GRAIN_DATA_URI}")`,
-          backgroundSize: "320px 320px",
-          opacity: 0.1,
+          backgroundSize: "380px 380px",
+          opacity: 0.08,
           mixBlendMode: "overlay",
           pointerEvents: "none",
         }}
@@ -186,16 +227,18 @@ const PhraseOverlay = ({ phrase }: { phrase: Phrase }) => {
     >
       <h2
         style={{
-          color: isBeat2 ? COLORS.peach : COLORS.cream,
+          color: isBeat2 ? COLORS.peachWarm : COLORS.cream,
           fontFamily: serif,
-          fontWeight: isBeat2 ? 500 : 400,
-          fontStyle: isBeat2 ? "italic" : "normal",
-          fontSize: isBeat2 ? 168 : 152,
-          letterSpacing: "0.01em",
-          lineHeight: 1.1,
+          fontWeight: isBeat2 ? 400 : 300,
+          fontStyle: "italic",  // ambas en itálica — más femenina, más editorial
+          fontSize: isBeat2 ? 148 : 130,
+          letterSpacing: isBeat2 ? "0.005em" : "0.02em",
+          lineHeight: 1.12,
           margin: 0,
           textAlign: "center",
-          textShadow: "0 6px 40px rgba(0,0,0,0.85)",
+          // Dreamy glow + dark shadow para legibilidad
+          textShadow:
+            "0 0 28px rgba(255,210,180,0.25), 0 6px 36px rgba(0,0,0,0.85)",
         }}
       >
         {phrase.text}

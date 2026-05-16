@@ -25,7 +25,7 @@ export const config = {
   // 3 clips back-to-back (60.7s total)
   clips: [
     { src: "videos/workout1.mov", startFromSec: 0, durationInFrames: 232 },  // 7.73s
-    { src: "videos/workout2.mov", startFromSec: 0, durationInFrames: 601 },  // 20.03s
+    { src: "videos/workout2.mov", startFromSec: 0, durationInFrames: 311 },  // 10.37s
     { src: "videos/workout3.mov", startFromSec: 0, durationInFrames: 990 },  // 33.00s
   ] as Clip[],
 
@@ -33,9 +33,9 @@ export const config = {
   crossDissolveFrames: 12,
 
   phrases: [
-    { text: "Más fuerte.", fromFrame: 270, durationInFrames: 360, variant: "beat1" }, // 9s - 21s
-    { text: "Más mía.",    fromFrame: 1380, durationInFrames: 440, variant: "beat2" }, // 46s - end
+    { text: "No tengo prisa.",     fromFrame: 240,  durationInFrames: 330, variant: "beat1" }, // 8s - 19s
+    { text: "Estoy floreciendo.",  fromFrame: 1100, durationInFrames: 410, variant: "beat2" }, // 36.7s - end
   ] as Phrase[],
 
-  flashFrames: [270, 1380],
+  flashFrames: [240, 1100],
 };
